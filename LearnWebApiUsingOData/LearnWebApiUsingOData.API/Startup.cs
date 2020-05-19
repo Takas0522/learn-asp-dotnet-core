@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using LearnWebApiUsingOData.API.Contexts;
+using Microsoft.AspNet.OData.Builder;
+using Microsoft.AspNet.OData.Extensions;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -11,6 +13,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using Microsoft.OData.Edm;
 using NLog;
 using NLog.Config;
 using NLog.Targets;
@@ -29,9 +32,11 @@ namespace LearnWebApiUsingOData.API
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddControllers();
-            NLogSettings();
             services.AddDbContext<LearnWebApiUsingODataDBContext>();
+            services.AddControllers(mvcOptions =>
+                mvcOptions.EnableEndpointRouting = false);
+            services.AddOData();
+            NLogSettings();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -42,16 +47,25 @@ namespace LearnWebApiUsingOData.API
                 app.UseDeveloperExceptionPage();
             }
 
+            IEdmModel model = EdmModelBuilder.GetEdmModel();
+
             app.UseHttpsRedirection();
 
             app.UseRouting();
 
             app.UseAuthorization();
 
-            app.UseEndpoints(endpoints =>
+            app.UseMvc(routeBuilder =>
             {
-                endpoints.MapControllers();
+                routeBuilder.Select().Expand().Filter().OrderBy();
+                routeBuilder.MapODataServiceRoute("odata", "odata", model);
             });
+
+            //app.UseEndpoints(endpoints =>
+            //{
+            //    //endpoints.MapControllers();
+            //    endpoints.MapODataRoute("odataPrefix", "odata", model);
+            //});
         }
 
         private void NLogSettings()
