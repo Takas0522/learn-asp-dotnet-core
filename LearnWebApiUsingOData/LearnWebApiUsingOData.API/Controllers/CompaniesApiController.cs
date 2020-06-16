@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace LearnWebApiUsingOData.API.Controllers
 {
+    // 普通のWebAPIとあいのりできるんかな？
     [Route("api/companies")]
     [ApiController]
     public class CompaniesApiController : ControllerBase

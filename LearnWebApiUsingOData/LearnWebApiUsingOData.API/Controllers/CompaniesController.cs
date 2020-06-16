@@ -4,11 +4,13 @@ using System.Linq;
 using System.Threading.Tasks;
 using LearnWebApiUsingOData.API.Contexts;
 using Microsoft.AspNet.OData;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace LearnWebApiUsingOData.API.Controllers
 {
+    [Authorize]
     public class CompaniesController : ControllerBase
     {
         private readonly LearnWebApiUsingODataDBContext _context;
