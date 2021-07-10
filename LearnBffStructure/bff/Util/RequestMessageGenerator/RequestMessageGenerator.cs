@@ -43,8 +43,8 @@ namespace Bff
 
             if (path.Contains("/one/"))
             {
-                var token = await _tokenProvider.GetAccessToken(new List<string> { "<WebAPI1(V2Appのスコープ)>" }, 2);
-                res.RequestUri = new Uri($"https://localhost:44329/{reqAbsUrl}");
+                var token = await _tokenProvider.GetAccessToken(new List<string> { "api://85d4ca43-7c3c-4f69-98cf-af49f157cdb7/access" }, 2);
+                res.RequestUri = new Uri($"http://okawa-hub-endpoint.azurewebsites.net/{reqAbsUrl}");
                 res.Headers.Authorization = new AuthenticationHeaderValue("Bearer", token);
                 return res;
             }

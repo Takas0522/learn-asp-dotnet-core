@@ -3,5 +3,8 @@
     "Values": {
         "AzureWebJobsStorage": "AzureWebJobsStorageConnectionStringValue",
         "FUNCTIONS_WORKER_RUNTIME": "dotnet"
+    },
+    "Host": {
+        "CORS": "*"
     }
 }
