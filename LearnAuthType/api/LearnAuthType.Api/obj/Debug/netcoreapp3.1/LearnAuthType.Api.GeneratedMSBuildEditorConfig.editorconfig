@@ -1,0 +1,3 @@
+is_global = true
+build_property.RootNamespace = LearnAuthType.Api
+build_property.ProjectDir = C:\Source\github\learn-asp-dotnet-core\LearnAuthType\api\LearnAuthType.Api\

@@ -1,0 +1,12 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
+  <PropertyGroup>
+    <TargetFramework>net6.0</TargetFramework>
+    <UserSecretsId>72afe5fb-f926-47b5-95fd-a2bdc0df6cb2</UserSecretsId>
+  </PropertyGroup>
+  <ItemGroup>
+    <PackageReference Include="Microsoft.Identity.Web" Version="1.*" />
+    <PackageReference Include="Swashbuckle.AspNetCore" Version="6.0.0" />
+	<PackageReference Include="Yarp.ReverseProxy" Version="1.0.0" />
+  </ItemGroup>
+  <ProjectExtensions><VisualStudio><UserProperties appsettings_1json__JsonSchema="" /></VisualStudio></ProjectExtensions>
+</Project>

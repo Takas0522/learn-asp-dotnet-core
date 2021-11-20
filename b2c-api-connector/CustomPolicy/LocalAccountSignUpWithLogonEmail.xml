@@ -1,0 +1,16 @@
+<ClaimsProvider>
+  <DisplayName>Local Account</DisplayName>
+  <TechnicalProfiles>
+    <TechnicalProfile Id="LocalAccountSignUpWithLogonEmail">
+      <OutputClaims>
+        <OutputClaim ClaimTypeReferenceId="email" PartnerClaimType="Verified.Email" Required="true"/>
+        <OutputClaim ClaimTypeReferenceId="newPassword" Required="true"/>
+        <OutputClaim ClaimTypeReferenceId="reenterPassword" Required="true"/>
+        <OutputClaim ClaimTypeReferenceId="displayName"/>
+      </OutputClaims>
+      <ValidationTechnicalProfiles>
+        <ValidationTechnicalProfile ReferenceId="REST-ValidateProfile" />
+      </ValidationTechnicalProfiles>
+    </TechnicalProfile>
+  </TechnicalProfiles>
+</ClaimsProvider>

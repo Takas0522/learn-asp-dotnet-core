@@ -1,0 +1,14 @@
+<button (click)="get()">GET</button>
+<button (click)="getQuery()">GET QUETY</button>
+<button (click)="getId()">GET ID</button>
+<button (click)="post()">POST</button>
+<button (click)="postFormData()">POST WITH FORM DATA</button>
+<button (click)="putData()">PUT</button>
+<button (click)="delete()">DELETE</button>
+<button (click)="deleteWithBody()">DELETE WITH BODY</button>
+<div>
+  <input type="file" multiple placeholder="POST FILE DATA" (change)="postFileData($event.target)"/>
+</div>
+<div>
+  <input type="file" multiple  placeholder="POST FILE AND PARAM DATA" (change)="postFileAndParamData($event.target)"/>
+</div>
