@@ -1,0 +1,20 @@
+syntax = "proto3";
+
+option csharp_namespace = "SwaAndCwa.Services";
+
+package users;
+
+// The greeting service definition.
+service UsersSrv {
+  rpc GetUser (IdRequest) returns (User);
+}
+
+// The request message containing the user's name.
+message IdRequest {
+  int32 id = 1;
+}
+
+message User {
+  int32 id = 1;
+  string name = 2;
+}
