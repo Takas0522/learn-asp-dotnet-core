@@ -5,7 +5,7 @@ flowchart LR
 
 swa[Static Web Apps]
 apim[API Management]
-oapi[Original REST Web API]
+oapi["Original REST Web API(DevTunnels)"]
 db[(Database)]
 gr[Microsoft Graph]
 swa --> apim
