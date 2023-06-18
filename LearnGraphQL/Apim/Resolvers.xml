@@ -1,0 +1,25 @@
+<!-- employees -->
+<http-data-source>
+	<http-request>
+		<set-method>GET</set-method>
+		<set-url>https://{api-path}/api/Employee</set-url>
+	</http-request>
+</http-data-source>
+<!-- employee -->
+<http-data-source>
+	<http-request>
+		<set-method>GET</set-method>
+		<set-url>@($"https://{api-path}/api/Employee/{context.GraphQL.Arguments["id"]}")</set-url>
+	</http-request>
+</http-data-source>
+<!-- me -->
+<http-data-source>
+	<http-request>
+		<get-authorization-context provider-id="aad-02" authorization-id="aad-02" context-variable-name="auth-context" identity-type="managed" ignore-error="false" />
+		<set-method>GET</set-method>
+		<set-url>https://graph.microsoft.com/v1.0/me</set-url>
+		<set-header name="authorization" exists-action="override">
+			<value>@("Bearer " + ((Authorization)context.Variables.GetValueOrDefault("auth-context"))?.AccessToken)</value>
+		</set-header>
+	</http-request>
+</http-data-source>
