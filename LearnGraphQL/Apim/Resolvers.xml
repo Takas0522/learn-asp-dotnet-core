@@ -1,0 +1,14 @@
+<!-- employees -->
+<http-data-source>
+	<http-request>
+		<set-method>GET</set-method>
+		<set-url>https://{api-path}/api/Employee</set-url>
+	</http-request>
+</http-data-source>
+<!-- employee -->
+<http-data-source>
+	<http-request>
+		<set-method>GET</set-method>
+		<set-url>@($"https://{api-path}/api/Employee/{context.GraphQL.Arguments["id"]}")</set-url>
+	</http-request>
+</http-data-source>
