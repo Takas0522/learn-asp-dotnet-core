@@ -83,6 +83,97 @@ Resolversで紐づけを行う。Graph QLの中で使用された値は`context.
 
 ## 参考
 
-* [Get Authorization Context Policy](https://learn.microsoft.com/ja-jp/azure/api-management/get-authorization-context-policy)
-* [Create an authorization with the Microsoft Graph API](https://learn.microsoft.com/en-us/azure/api-management/authorizations-how-to-azure-ad)
-* [HTTP data source for a resolver](https://learn.microsoft.com/en-us/azure/api-management/http-data-source-policy)
+* [Get Authorization Context Policy](https://learn.microsoft.com/ja-jp/azure/api-management/get-authorization-context-policy?wt.mc_id=M365-MVP-5003850)
+* [Create an authorization with the Microsoft Graph API](https://learn.microsoft.com/en-us/azure/api-management/authorizations-how-to-azure-ad?wt.mc_id=M365-MVP-5003850)
+* [HTTP data source for a resolver](https://learn.microsoft.com/en-us/azure/api-management/http-data-source-policy?wt.mc_id=M365-MVP-5003850)
+
+# DatabaseにData Api Builderを介してAPIMからアクセスする
+
+## はじめに
+
+8/11段階でデータAPIビルダーはパブリックプレビュー状態。
+
+記載のコマンドなどが変更される可能性がありますのでご注意ください。
+
+## データAPIビルダーとは
+
+データAPIビルダーを利用すると、RESTまたはGraph QLを介してデータベースにアクセスできるようになる。
+
+接続できるデータベースは様々で、Azure SQL/SQL Sever/PostgreSQL/MySQL/Cosmos DBといった複数のDBに対応しているようである。
+
+ローカルではコマンドベースで実行できる模様。
+
+Azure上で利用する場合は、Static Web AppsやContainer Appsを利用して実行することができるようだ。
+
+コンテナを利用する場合は[Microsoftが提供するコンテナ](https://mcr.microsoft.com/product/azure-databases/data-api-builder/about)に諸々設定を行うことで利用できるようになるよう。
+
+## ローカルでの実行
+
+### init
+
+前述の通り、ローカルでの実行はコマンドベースで実行可能。
+
+基本的に[クイックスタート](https://learn.microsoft.com/ja-jp/azure/data-api-builder/get-started/get-started-with-data-api-builder?wt.mc_id=M365-MVP-5003850)の通りに作業すれば利用できるようになる。
+
+今回は[このリポジトリのDatabase](./LearnGraphQL.Database/)をローカルに構築したので下記のようなコマンドを実行する。
+
+`dab init --database-type "mssql" --connection-string "Server=(localdb)\ProjectsV13;Database=LearnGraphQL.Database;Trusted_Connection=True;"`
+
+作成された構成ファイルは [dab-config.json](./dab/dab-config.json)を参照。
+
+## エンティティの追加
+
+REST/Graphエンドポイントを作成する。ドキュメントにコマンドが記載されているのでそれのとおりに実行してみる。
+
+今回作成したDBには`Item`テーブルがあるのでそれをターゲットにするため下記コマンドを実行する。
+
+`dab add Item --source dbo.Item --permissions "anonymous:*"`
+
+構成ファイル [dab-config.json](./dab/dab-config.json)が更新された。
+
+更新された箇所は`entities`に記載されいる。
+
+## データAPIビルダーを起動してアクセスする
+
+`dab start`コマンドを実行するとWebAPIを介してアクセスできるようになる。
+
+![](./.attachments/2023-08-14-15-35-46.png)
+
+![](./.attachments/2023-08-14-15-36-51.png)
+
+RESTの方はoData形式でアクセスできるようになっている模様。
+
+GraphQLも同様にエンドポイントが作成されているので、下記のようにアクセスすることができる。
+
+![](./.attachments/2023-08-14-15-42-31.png)
+
+これをAPI ManagementからGraph QLでアクセスできるようにしたいので、スキーマを出力する。
+
+`dab export --graphql -c dab-config.json -o ./schemas`
+
+生成されたGraphQLスキーマは[schemasディレクトリ](./dab/schemas/)を参照。
+
+APIMとの接続はAzureにあげるのは面倒なのでDev Tunnelを利用する。今回はCLIで下記コマンドを実行しホストする。
+
+```cmd
+devtunnel user login
+devtunnel host -p 5001 --allow-anonymous --protocol https
+```
+
+環境をホストしたあとは下記のようにAPIMを設定する。`Schema file`には先程出力したGraph QLのスキーマファイルを指定する。
+
+![](./.attachments/2023-08-14-18-03-10.png)
+
+APIMでもDev Tunnelを介してData API Builderで作成したAPIにアクセスできるようになった。
+
+![](./.attachments/2023-08-14-18-05-23.png)
+
+## 参考
+
+* [データ API ビルダーとは](https://learn.microsoft.com/ja-jp/azure/data-api-builder/overview-to-data-api-builder?tabs=azure-sql?wt.mc_id=M365-MVP-5003850)
+* [Azure での Data API ビルダーの実行](https://learn.microsoft.com/ja-jp/azure/data-api-builder/running-in-azure?wt.mc_id=M365-MVP-5003850)
+* [dab CLI について](https://learn.microsoft.com/ja-jp/azure/data-api-builder/data-api-builder-cli?wt.mc_id=M365-MVP-5003850)
+* [クイック スタート: Azure SQLで Data API ビルダーを使用する](https://learn.microsoft.com/ja-jp/azure/data-api-builder/get-started/get-started-azure-sql)
+* [データ API ビルダーの REST](https://learn.microsoft.com/ja-jp/azure/data-api-builder/rest)
+* [スキーマをエクスポートする新しい CLI コマンドGraphQL](https://learn.microsoft.com/ja-jp/azure/data-api-builder/whats-new-0-6-13#new-cli-command-to-export-graphql-schema)
+* [Dev トンネルのコマンド ライン リファレンス](https://learn.microsoft.com/ja-jp/azure/developer/dev-tunnels/cli-commands)
